@@ -5,8 +5,8 @@ title: Open ports in the Linux firewall to access POP and IMAP mail servers
 type: article
 created_date: '2011-03-08'
 created_by: Rackspace Support
-last_modified_date: '2016-07-29'
-last_modified_by: Kyle Laffoon
+last_modified_date: '2020-06-30'
+last_modified_by: Pavlo Yashchurko
 product: Cloud Servers
 product_url: cloud-servers
 ---
@@ -30,22 +30,22 @@ The following table lists the ports used be each of the TCP/IP protocols for mai
 **For Centos 7 and later:**
 
 1. Enter the following commands to open the preceding ports:
-
+```sh
       firewall-cmd --zone=public --add-port=25/tcp --permanent
-
+```
    Repeat this command, replacing the port number, for each of the preceding ports.**
 
 2. List the rules on a given zone by running the following command:
-
+```sh
       firewall-cmd --query-service=<service name>
-
+```
 **For Debian and CentOS 6 and earlier:**
 
 Edit the `iptables.test.rules` file to allow access to those ports. Although the example uses port 25, you can change it to the recommended value.
 
 1. Open the rules file with the following command: `sudo nano /etc/iptables.test.rules`
 2. Just before the HTTP and HTTPS entries, add the following lines:
-
+```sh
          # Allows SMTP access
          -A INPUT -p tcp --dport 25 -j ACCEPT
 
@@ -56,21 +56,21 @@ Edit the `iptables.test.rules` file to allow access to those ports. Although the
          # Allows imap and imaps connections
          -A INPUT -p tcp --dport 143 -j ACCEPT
          -A INPUT -p tcp --dport 993 -j ACCEPT
-
+```
 3. Apply the new rules:
 
    For Debian:
-
+```sh
          sudo iptables-restore < /etc/iptables.test.rules
-
+```
    For CentOS 6 and earlier:
-
+```sh
       Skip this step and proceed to the following step.
-
+```
 4. Check that the rules have been applied:
-
+```sh
          sudo iptables -L
-
+```
    The following information should be in the output from the command:
 
          ACCEPT all -- anywhere anywhere state RELATED,ESTABLISHED
@@ -81,18 +81,19 @@ Edit the `iptables.test.rules` file to allow access to those ports. Although the
          ACCEPT tcp -- anywhere anywhere tcp dpt:imaps
 
 5. Enter the root shell. You must have full root access to save the iptables rules.
-
+```sh
          sudo -i
-
+```
 6. Save the iptables rules:
    For Debian:
-
+```sh
          iptables-save > /etc/iptables.up.rules
-
+```
    For CentOS 6 and earlier:
-
+```sh
          iptables-save > sudo iptables-restore &lt;
-
+```
 7. Exit the root shell:
-
+```sh
          exit
+```
